@@ -52,7 +52,7 @@ export default function Dashboard() {
     if (quotes.length > 0) {
       const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
       setDailyQuote(randomQuote);
-    } else if (user) {
+    } else if (user && !dailyQuote) {
       // Default quote if none exists
       setDailyQuote({
         id: 0,
@@ -65,7 +65,7 @@ export default function Dashboard() {
         dateAdded: new Date(),
       });
     }
-  }, [quotes]);
+  }, [quotes, user?.id, dailyQuote]);
 
   const getNewQuote = () => {
     if (quotes.length > 1) {
