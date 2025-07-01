@@ -424,7 +424,7 @@ export default function Events() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Linked Person (Optional)</FormLabel>
-                    <Select onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)} value={field.value?.toString()}>
+                    <Select onValueChange={(value) => field.onChange(value === "none" ? undefined : parseInt(value))} value={field.value?.toString() || "none"}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select family member" />

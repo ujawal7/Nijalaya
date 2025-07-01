@@ -65,7 +65,7 @@ export default function Dashboard() {
         dateAdded: new Date(),
       });
     }
-  }, [quotes, user]);
+  }, [quotes]);
 
   const getNewQuote = () => {
     if (quotes.length > 1) {
