@@ -9,6 +9,7 @@ import Layout from "@/components/Layout";
 
 import Login from "@/pages/login";
 import Dashboard from "@/pages/dashboard";
+import Family from "@/pages/family";
 import FamilyTree from "@/pages/family-tree";
 import MediaTracker from "@/pages/media-tracker";
 import Journal from "@/pages/journal";
@@ -25,7 +26,8 @@ function Router() {
     <Switch>
       <Route path="/" component={Login} />
       <Route path="/dashboard" component={() => <Layout><Dashboard /></Layout>} />
-      <Route path="/family" component={() => <Layout><FamilyTree /></Layout>} />
+      <Route path="/family" component={() => <Layout><Family /></Layout>} />
+      <Route path="/family-tree" component={() => <Layout><FamilyTree /></Layout>} />
       <Route path="/media" component={() => <Layout><MediaTracker /></Layout>} />
       <Route path="/journal" component={() => <Layout><Journal /></Layout>} />
       <Route path="/tasks" component={() => <Layout><Tasks /></Layout>} />

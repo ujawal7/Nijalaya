@@ -222,12 +222,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/events", async (req, res) => {
     try {
-      console.log("Event request body:", JSON.stringify(req.body, null, 2));
-      const eventData = insertEventSchema.parse(req.body);
+      const body = { ...req.body };
+      if (body.date && typeof body.date === 'string') {
+        body.date = new Date(body.date);
+      }
+      const eventData = insertEventSchema.parse(body);
       const event = await storage.createEvent(eventData);
       res.json(event);
     } catch (error) {
-      console.log("Event validation error:", error);
       res.status(400).json({ message: "Invalid event data", error });
     }
   });

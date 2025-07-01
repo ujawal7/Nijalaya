@@ -124,6 +124,9 @@ The application manages nine core data entities:
 ```
 Changelog:
 - July 01, 2025. Initial setup
+- July 01, 2025. Added Family Tree visualization feature with interactive node-based layout
+- July 01, 2025. Fixed event creation validation errors with proper date parsing
+- July 01, 2025. Enhanced family management with separate family list and tree visualization pages
 ```
 
 ## User Preferences
