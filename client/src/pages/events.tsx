@@ -431,7 +431,7 @@ export default function Events() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="none">None</SelectItem>
                         {familyMembers.map((member) => (
                           <SelectItem key={member.id} value={member.id.toString()}>
                             {member.name}
@@ -451,7 +451,7 @@ export default function Events() {
                   <FormItem>
                     <FormLabel>Location (Optional)</FormLabel>
                     <FormControl>
-                      <Input placeholder="Event location" {...field} />
+                      <Input placeholder="Event location" {...field} value={field.value || ""} onChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -465,7 +465,7 @@ export default function Events() {
                   <FormItem>
                     <FormLabel>Description (Optional)</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Additional details..." {...field} />
+                      <Textarea placeholder="Additional details..." {...field} value={field.value || ""} onChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -479,7 +479,7 @@ export default function Events() {
                   <FormItem className="flex flex-row items-center space-x-3 space-y-0">
                     <FormControl>
                       <Checkbox
-                        checked={field.value}
+                        checked={field.value === true}
                         onCheckedChange={field.onChange}
                       />
                     </FormControl>

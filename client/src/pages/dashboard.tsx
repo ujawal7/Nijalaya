@@ -52,11 +52,11 @@ export default function Dashboard() {
     if (quotes.length > 0) {
       const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
       setDailyQuote(randomQuote);
-    } else {
+    } else if (user) {
       // Default quote if none exists
       setDailyQuote({
         id: 0,
-        userId: user?.id || 0,
+        userId: user.id,
         text: "Family is not an important thing, it's everything.",
         author: "Michael J. Fox",
         source: null,
@@ -65,7 +65,7 @@ export default function Dashboard() {
         dateAdded: new Date(),
       });
     }
-  }, [quotes, user?.id]);
+  }, [quotes, user]);
 
   const getNewQuote = () => {
     if (quotes.length > 1) {
