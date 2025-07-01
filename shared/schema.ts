@@ -1,4 +1,5 @@
 import { pgTable, text, serial, integer, boolean, timestamp, json } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -143,6 +144,95 @@ export const insertPlaceSchema = createInsertSchema(places).omit({ id: true });
 export const insertQuoteSchema = createInsertSchema(quotes).omit({ id: true, dateAdded: true });
 
 // Types
+// Relations
+export const usersRelations = relations(users, ({ many }) => ({
+  familyMembers: many(familyMembers),
+  media: many(media),
+  journalEntries: many(journalEntries),
+  tasks: many(tasks),
+  events: many(events),
+  photos: many(photos),
+  bookmarks: many(bookmarks),
+  places: many(places),
+  quotes: many(quotes),
+}));
+
+export const familyMembersRelations = relations(familyMembers, ({ one, many }) => ({
+  user: one(users, {
+    fields: [familyMembers.userId],
+    references: [users.id],
+  }),
+  parent: one(familyMembers, {
+    fields: [familyMembers.parentId],
+    references: [familyMembers.id],
+  }),
+  children: many(familyMembers),
+}));
+
+export const mediaRelations = relations(media, ({ one }) => ({
+  user: one(users, {
+    fields: [media.userId],
+    references: [users.id],
+  }),
+}));
+
+export const journalEntriesRelations = relations(journalEntries, ({ one }) => ({
+  user: one(users, {
+    fields: [journalEntries.userId],
+    references: [users.id],
+  }),
+}));
+
+export const tasksRelations = relations(tasks, ({ one }) => ({
+  user: one(users, {
+    fields: [tasks.userId],
+    references: [users.id],
+  }),
+}));
+
+export const eventsRelations = relations(events, ({ one }) => ({
+  user: one(users, {
+    fields: [events.userId],
+    references: [users.id],
+  }),
+  linkedPerson: one(familyMembers, {
+    fields: [events.linkedPersonId],
+    references: [familyMembers.id],
+  }),
+}));
+
+export const photosRelations = relations(photos, ({ one }) => ({
+  user: one(users, {
+    fields: [photos.userId],
+    references: [users.id],
+  }),
+  linkedEvent: one(events, {
+    fields: [photos.linkedEventId],
+    references: [events.id],
+  }),
+}));
+
+export const bookmarksRelations = relations(bookmarks, ({ one }) => ({
+  user: one(users, {
+    fields: [bookmarks.userId],
+    references: [users.id],
+  }),
+}));
+
+export const placesRelations = relations(places, ({ one }) => ({
+  user: one(users, {
+    fields: [places.userId],
+    references: [users.id],
+  }),
+}));
+
+export const quotesRelations = relations(quotes, ({ one }) => ({
+  user: one(users, {
+    fields: [quotes.userId],
+    references: [users.id],
+  }),
+}));
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type FamilyMember = typeof familyMembers.$inferSelect;

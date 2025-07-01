@@ -5,6 +5,8 @@ import {
   type Photo, type InsertPhoto, type Bookmark, type InsertBookmark, type Place, type InsertPlace,
   type Quote, type InsertQuote
 } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
   // Users
@@ -415,4 +417,271 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export class DatabaseStorage implements IStorage {
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
+    return user;
+  }
+
+  async updateUser(id: number, userData: Partial<User>): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set(userData)
+      .where(eq(users.id, id))
+      .returning();
+    return user || undefined;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return await db.select().from(users);
+  }
+
+  async getFamilyMembers(userId: number): Promise<FamilyMember[]> {
+    return await db.select().from(familyMembers).where(eq(familyMembers.userId, userId));
+  }
+
+  async createFamilyMember(insertMember: InsertFamilyMember): Promise<FamilyMember> {
+    const [member] = await db
+      .insert(familyMembers)
+      .values(insertMember)
+      .returning();
+    return member;
+  }
+
+  async updateFamilyMember(id: number, memberData: Partial<FamilyMember>): Promise<FamilyMember | undefined> {
+    const [member] = await db
+      .update(familyMembers)
+      .set(memberData)
+      .where(eq(familyMembers.id, id))
+      .returning();
+    return member || undefined;
+  }
+
+  async deleteFamilyMember(id: number): Promise<boolean> {
+    const result = await db.delete(familyMembers).where(eq(familyMembers.id, id));
+    return result.rowCount > 0;
+  }
+
+  async getMedia(userId: number): Promise<Media[]> {
+    return await db.select().from(media).where(eq(media.userId, userId));
+  }
+
+  async createMedia(insertMedia: InsertMedia): Promise<Media> {
+    const [mediaItem] = await db
+      .insert(media)
+      .values(insertMedia)
+      .returning();
+    return mediaItem;
+  }
+
+  async updateMedia(id: number, mediaData: Partial<Media>): Promise<Media | undefined> {
+    const [mediaItem] = await db
+      .update(media)
+      .set(mediaData)
+      .where(eq(media.id, id))
+      .returning();
+    return mediaItem || undefined;
+  }
+
+  async deleteMedia(id: number): Promise<boolean> {
+    const result = await db.delete(media).where(eq(media.id, id));
+    return result.rowCount > 0;
+  }
+
+  async getJournalEntries(userId: number): Promise<JournalEntry[]> {
+    return await db.select().from(journalEntries).where(eq(journalEntries.userId, userId));
+  }
+
+  async createJournalEntry(insertEntry: InsertJournalEntry): Promise<JournalEntry> {
+    const [entry] = await db
+      .insert(journalEntries)
+      .values(insertEntry)
+      .returning();
+    return entry;
+  }
+
+  async updateJournalEntry(id: number, entryData: Partial<JournalEntry>): Promise<JournalEntry | undefined> {
+    const [entry] = await db
+      .update(journalEntries)
+      .set(entryData)
+      .where(eq(journalEntries.id, id))
+      .returning();
+    return entry || undefined;
+  }
+
+  async deleteJournalEntry(id: number): Promise<boolean> {
+    const result = await db.delete(journalEntries).where(eq(journalEntries.id, id));
+    return result.rowCount > 0;
+  }
+
+  async getTasks(userId: number): Promise<Task[]> {
+    return await db.select().from(tasks).where(eq(tasks.userId, userId));
+  }
+
+  async createTask(insertTask: InsertTask): Promise<Task> {
+    const [task] = await db
+      .insert(tasks)
+      .values(insertTask)
+      .returning();
+    return task;
+  }
+
+  async updateTask(id: number, taskData: Partial<Task>): Promise<Task | undefined> {
+    const [task] = await db
+      .update(tasks)
+      .set(taskData)
+      .where(eq(tasks.id, id))
+      .returning();
+    return task || undefined;
+  }
+
+  async deleteTask(id: number): Promise<boolean> {
+    const result = await db.delete(tasks).where(eq(tasks.id, id));
+    return result.rowCount > 0;
+  }
+
+  async getEvents(userId: number): Promise<Event[]> {
+    return await db.select().from(events).where(eq(events.userId, userId));
+  }
+
+  async createEvent(insertEvent: InsertEvent): Promise<Event> {
+    const [event] = await db
+      .insert(events)
+      .values(insertEvent)
+      .returning();
+    return event;
+  }
+
+  async updateEvent(id: number, eventData: Partial<Event>): Promise<Event | undefined> {
+    const [event] = await db
+      .update(events)
+      .set(eventData)
+      .where(eq(events.id, id))
+      .returning();
+    return event || undefined;
+  }
+
+  async deleteEvent(id: number): Promise<boolean> {
+    const result = await db.delete(events).where(eq(events.id, id));
+    return result.rowCount > 0;
+  }
+
+  async getPhotos(userId: number): Promise<Photo[]> {
+    return await db.select().from(photos).where(eq(photos.userId, userId));
+  }
+
+  async createPhoto(insertPhoto: InsertPhoto): Promise<Photo> {
+    const [photo] = await db
+      .insert(photos)
+      .values(insertPhoto)
+      .returning();
+    return photo;
+  }
+
+  async updatePhoto(id: number, photoData: Partial<Photo>): Promise<Photo | undefined> {
+    const [photo] = await db
+      .update(photos)
+      .set(photoData)
+      .where(eq(photos.id, id))
+      .returning();
+    return photo || undefined;
+  }
+
+  async deletePhoto(id: number): Promise<boolean> {
+    const result = await db.delete(photos).where(eq(photos.id, id));
+    return result.rowCount > 0;
+  }
+
+  async getBookmarks(userId: number): Promise<Bookmark[]> {
+    return await db.select().from(bookmarks).where(eq(bookmarks.userId, userId));
+  }
+
+  async createBookmark(insertBookmark: InsertBookmark): Promise<Bookmark> {
+    const [bookmark] = await db
+      .insert(bookmarks)
+      .values(insertBookmark)
+      .returning();
+    return bookmark;
+  }
+
+  async updateBookmark(id: number, bookmarkData: Partial<Bookmark>): Promise<Bookmark | undefined> {
+    const [bookmark] = await db
+      .update(bookmarks)
+      .set(bookmarkData)
+      .where(eq(bookmarks.id, id))
+      .returning();
+    return bookmark || undefined;
+  }
+
+  async deleteBookmark(id: number): Promise<boolean> {
+    const result = await db.delete(bookmarks).where(eq(bookmarks.id, id));
+    return result.rowCount > 0;
+  }
+
+  async getPlaces(userId: number): Promise<Place[]> {
+    return await db.select().from(places).where(eq(places.userId, userId));
+  }
+
+  async createPlace(insertPlace: InsertPlace): Promise<Place> {
+    const [place] = await db
+      .insert(places)
+      .values(insertPlace)
+      .returning();
+    return place;
+  }
+
+  async updatePlace(id: number, placeData: Partial<Place>): Promise<Place | undefined> {
+    const [place] = await db
+      .update(places)
+      .set(placeData)
+      .where(eq(places.id, id))
+      .returning();
+    return place || undefined;
+  }
+
+  async deletePlace(id: number): Promise<boolean> {
+    const result = await db.delete(places).where(eq(places.id, id));
+    return result.rowCount > 0;
+  }
+
+  async getQuotes(userId: number): Promise<Quote[]> {
+    return await db.select().from(quotes).where(eq(quotes.userId, userId));
+  }
+
+  async createQuote(insertQuote: InsertQuote): Promise<Quote> {
+    const [quote] = await db
+      .insert(quotes)
+      .values(insertQuote)
+      .returning();
+    return quote;
+  }
+
+  async updateQuote(id: number, quoteData: Partial<Quote>): Promise<Quote | undefined> {
+    const [quote] = await db
+      .update(quotes)
+      .set(quoteData)
+      .where(eq(quotes.id, id))
+      .returning();
+    return quote || undefined;
+  }
+
+  async deleteQuote(id: number): Promise<boolean> {
+    const result = await db.delete(quotes).where(eq(quotes.id, id));
+    return result.rowCount > 0;
+  }
+}
+
+export const storage = new DatabaseStorage();
